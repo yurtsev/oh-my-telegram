@@ -1,0 +1,51 @@
+[project]
+name = "oh-my-telegram"
+version = "0.1.0"
+description = "Личный бот-пульт для управления своим Telegram-аккаунтом"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.21.0",
+    "alembic>=1.16.4",
+    "asyncpg>=0.30.0",
+    "dishka>=1.9.1",
+    "greenlet>=3.2.3",
+    "pydantic-settings>=2.10.1",
+    "sqlalchemy>=2.0.43",
+    "structlog>=24.4.0",
+    "telethon>=1.40.0",
+    "cryptg>=0.4.0",
+    "cryptography>=50.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.0",
+    "pytest-asyncio>=1.1.0",
+    "ruff>=0.12.9",
+]
+
+[tool.ruff]
+line-length = 79
+target-version = "py312"
+src = ["src"]
+extend-exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W505", "B", "C4", "ARG", "UP", "SIM", "Q"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.ruff.format]
+quote-style = "preserve"
+skip-magic-trailing-comma = false
+indent-style = "tab"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-q --import-mode=importlib"

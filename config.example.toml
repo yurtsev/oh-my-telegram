@@ -1,0 +1,44 @@
+# Скопируй в config.toml и заполни. config.toml в .gitignore.
+
+[logging]
+level = "INFO"
+
+[app]
+# Часовой пояс для отображения времени в боте.
+timezone = "Europe/Moscow"
+
+[bot]
+# Токен от @BotFather.
+token = ""
+# Твой Telegram ID — бот отвечает только ему, остальных молча игнорирует.
+owner_id = 0
+
+[userbot]
+# https://my.telegram.org → API development tools.
+api_id = 0
+api_hash = ""
+# Так сессия подписана в «Настройки → Устройства».
+device_model = "oh-my-telegram"
+# Сколько живёт незавершённый вход (код → пароль).
+login_timeout_min = 5
+
+[security]
+# Ключ шифрования сессии аккаунта в БД: `make gen-key`. Храни отдельно от
+# бэкапов БД. Вход в аккаунт — через бота («👤 Аккаунт»), не через конфиг.
+session_key = ""
+
+[database]
+postgres_username = "postgres"
+postgres_password = "postgres"
+postgres_db = "oh_my_telegram"
+postgres_host = "localhost"
+postgres_port = 5432
+
+[emoji_rotation]
+# Интервал смены по умолчанию (до первой настройки в боте).
+default_interval_min = 1440
+# Минимальный интервал — чаще менять статус нет смысла и рискованно
+# по flood-лимитам Telegram.
+min_interval_min = 5
+# Через сколько повторить попытку, если Telegram отказал в смене.
+retry_delay_min = 10
