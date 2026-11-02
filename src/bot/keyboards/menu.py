@@ -9,6 +9,7 @@ class MenuSection(StrEnum):
 	main = "main"
 	emoji_status = "emoji_status"
 	account = "account"
+	help = "help"
 
 
 class MenuData(CallbackData, prefix="menu"):
@@ -27,4 +28,17 @@ class MenuKeyboards:
 			text="👤 Аккаунт",
 			callback_data=MenuData(section=MenuSection.account),
 		)
+		ib.button(
+			text="❓ Помощь",
+			callback_data=MenuData(section=MenuSection.help),
+		)
 		return ib.adjust(1).as_markup()
+
+	@staticmethod
+	def help_kb() -> InlineKeyboardMarkup:
+		ib = InlineKeyboardBuilder()
+		ib.button(
+			text="◀️ Меню",
+			callback_data=MenuData(section=MenuSection.main),
+		)
+		return ib.as_markup()

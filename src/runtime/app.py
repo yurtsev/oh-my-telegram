@@ -8,6 +8,7 @@ import asyncio
 from aiogram import Bot
 
 from src.bot.services.account import AccountBotService
+from src.bot.services.menu import MenuBotService
 from src.runtime.aiogram import AiogramRuntime
 from src.runtime.bootstrap import run_async_entrypoint
 from src.runtime.containers import make_app_container
@@ -21,6 +22,7 @@ async def main() -> None:
 	container = make_app_container()
 	try:
 		bot = await container.get(Bot)
+		await (await container.get(MenuBotService)).setup_commands()
 		sessions = await container.get(UserbotSessionService)
 		await (await container.get(ChatMuteService)).load()
 		# Обработчики команд вешаются на каждый новый клиент аккаунта,

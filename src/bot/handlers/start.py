@@ -4,20 +4,44 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
 from dishka.integrations.aiogram import FromDishka
 
-from src.bot.keyboards import MenuData, MenuKeyboards, MenuSection
+from src.bot.keyboards import MenuData, MenuSection
 from src.bot.services.emoji_status import EmojiStatusBotService
-from src.bot.texts import MenuText
+from src.bot.services.menu import MenuBotService
 
 router = Router()
 
 
 @router.message(CommandStart())
-@router.message(Command("menu"))
-async def main_menu(message: Message, state: FSMContext):
+async def start(
+	message: Message,
+	state: FSMContext,
+	service: FromDishka[MenuBotService],
+):
 	await state.clear()
-	await message.answer(
-		MenuText.main(), reply_markup=MenuKeyboards.main_menu_kb()
-	)
+	# На старте приложения список команд мог не встать (владелец ещё не
+	# писал боту) — /start как раз тот момент, когда чат уже есть.
+	await service.setup_commands()
+	await service.send_menu(message)
+
+
+@router.message(Command("menu"))
+async def menu(
+	message: Message,
+	state: FSMContext,
+	service: FromDishka[MenuBotService],
+):
+	await state.clear()
+	await service.send_menu(message)
+
+
+@router.message(Command("help"))
+async def help_command(
+	message: Message,
+	state: FSMContext,
+	service: FromDishka[MenuBotService],
+):
+	await state.clear()
+	await service.send_help(message)
 
 
 @router.message(Command("emoji"))
@@ -31,13 +55,23 @@ async def emoji_status_command(
 
 
 @router.callback_query(MenuData.filter(F.section == MenuSection.main))
-async def main_menu_callback(call: CallbackQuery, state: FSMContext):
+async def menu_callback(
+	call: CallbackQuery,
+	state: FSMContext,
+	service: FromDishka[MenuBotService],
+):
 	await state.clear()
-	if isinstance(call.message, Message):
-		await call.message.edit_text(
-			MenuText.main(), reply_markup=MenuKeyboards.main_menu_kb()
-		)
-	await call.answer()
+	await service.show_menu(call)
+
+
+@router.callback_query(MenuData.filter(F.section == MenuSection.help))
+async def help_callback(
+	call: CallbackQuery,
+	state: FSMContext,
+	service: FromDishka[MenuBotService],
+):
+	await state.clear()
+	await service.show_help(call)
 
 
 @router.callback_query(MenuData.filter(F.section == MenuSection.emoji_status))

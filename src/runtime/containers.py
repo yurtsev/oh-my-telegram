@@ -4,6 +4,7 @@ from src.core.di import (
 	AccountProvider,
 	DbProvider,
 	EmojiStatusProvider,
+	MenuProvider,
 	TelegramBotProvider,
 	UserbotCommandsProvider,
 	UserbotProvider,
@@ -17,5 +18,6 @@ def make_app_container() -> AsyncContainer:
 		UserbotProvider(),
 		EmojiStatusProvider(),
 		AccountProvider(),
+		MenuProvider(),
 		UserbotCommandsProvider(),
 	)
